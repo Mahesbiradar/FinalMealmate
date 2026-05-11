@@ -1,79 +1,124 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-</head>
-<body>
-    <h1>Checkout</h1>
-    <h2>Welcome, {{ username }}</h2>
+{% extends 'delivery/base.html' %}
+{% block title %}Checkout — Meal Buddy{% endblock %}
 
-    {% if error %}
-    <p style="color: red;">{{ error }}</p>
-    {% else %}
+{% block extra_head %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+{% endblock %}
 
+{% block navbar_extra %}
+<div class="ms-auto d-flex align-items-center gap-3">
+    <span class="navbar-text">
+        <i class="bi bi-person-circle me-1" style="color: #FF6B35;"></i>{{ username }}
+    </span>
+</div>
+{% endblock %}
 
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h2><i class="bi bi-credit-card me-2"></i>Checkout</h2>
+        <p>Complete your payment to place the order.</p>
+    </div>
+</div>
 
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>₹{{ item.price }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h3>Total: ₹{{ total_price }}</h3>
+            {% if error %}
+            <div class="alert alert-danger d-flex align-items-center gap-3 mb-4" style="border-radius:12px;">
+                <i class="bi bi-exclamation-circle-fill fs-4"></i>
+                <div>{{ error }}</div>
+            </div>
+            <div class="text-center">
+                <a href="{% url 'show_cart' username %}" class="btn btn-primary" style="border-radius:10px;">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Cart
+                </a>
+            </div>
 
+            {% else %}
 
+            <!-- Items summary -->
+            <div class="card mb-4">
+                <div class="card-header-accent">
+                    <h5 class="mb-0"><i class="bi bi-bag-check me-2"></i>Order Summary</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-styled mb-0">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-end">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td class="fw-semibold">{{ item.name }}</td>
+                                <td class="text-end" style="color:#FF6B35;">₹{{ item.price }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-body border-top px-4 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold fs-5">Total Amount</span>
+                        <span class="fw-bold fs-4" style="color:#FF6B35;">₹{{ total_price }}</span>
+                    </div>
+                </div>
+            </div>
 
-    
+            <!-- Pay button -->
+            <div class="card">
+                <div class="card-body p-4 text-center">
+                    <div style="font-size:2.5rem; margin-bottom:1rem;">🔒</div>
+                    <h5 class="fw-bold mb-1" style="color:#1a1a2e;">Secure Payment</h5>
+                    <p class="text-muted mb-4" style="font-size:0.9rem;">
+                        Your payment is secured by Razorpay. We accept UPI, cards, and net banking.
+                    </p>
+                    <button id="rzp-button" class="btn btn-primary btn-lg w-100 py-3" style="border-radius:12px; font-size:1.05rem;">
+                        <i class="bi bi-shield-lock me-2"></i>Pay ₹{{ total_price }} with Razorpay
+                    </button>
+                    <p class="text-muted mt-3 mb-0" style="font-size:0.8rem;">
+                        <i class="bi bi-lock-fill me-1"></i>256-bit SSL encrypted &amp; PCI DSS compliant
+                    </p>
+                </div>
+            </div>
 
-    <button id="rzp-button">Pay with Razorpay</button>
-    {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-
-    
-
-    <script>
-        var options = {
-            "key": "{{ rzp_test_lT6VV3Hhr4ayCQ }}",  // Razorpay API key
-            "amount": "{{ total_price|floatformat:2|add:'0.00'|floatformat:2 }}00", // Amount in paisa
-            "currency": "INR",
-            "name": "Meal Buddy",
-            "description": "Order Payment",
-            "order_id": "{{ order_id }}",  // Razorpay order ID
-            "handler": function (response) {
-                alert("Payment Successful!");
-                // Redirect to the orders page
-                window.location.href = "{% url 'orders' username %}";
-            },
-            "prefill": {
-                "name": "{{ username }}",
-                "email": "customer@example.com",
-                "contact": "9999999999"
-            },
-            "theme": {
-                "color": "#528FF0"
-            }
-        };
-        var rzp = new Razorpay(options);
-    
-        document.getElementById('rzp-button').onclick = function(e) {
-            rzp.open();
-            e.preventDefault();
+{% block extra_scripts %}
+{% if not error %}
+<script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": {{ total_price }} * 100,
+        "currency": "INR",
+        "name": "Meal Buddy",
+        "description": "Food Order Payment",
+        "order_id": "{{ order_id }}",
+        "handler": function (response) {
+            window.location.href = "{% url 'orders' username %}";
+        },
+        "prefill": {
+            "name": "{{ username }}",
+            "email": "customer@example.com",
+            "contact": "9999999999"
+        },
+        "theme": {
+            "color": "#FF6B35"
         }
-    </script>
-    
-</body>
-</html>
+    };
+    var rzp = new Razorpay(options);
+    document.getElementById('rzp-button').onclick = function(e) {
+        rzp.open();
+        e.preventDefault();
+    };
+</script>
+{% endif %}
+{% endblock %}

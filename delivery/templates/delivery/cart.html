@@ -1,39 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    Hi {{username}} here are you items
-    <!-- show current menu -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%  for item in itemList %}
-                <tr>
-                    <td>
-                        <img src="{{ item.picture }}">
-                    </td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        <h2>Total price : {{total_price}}</h2>
-        
-        <form action="{% url 'checkout' username %}">
-            <input type="submit" value="CHECK OUT" />
-        </form>
-    </table>
-</body>
-</html>
+{% extends 'delivery/base.html' %}
+{% block title %}My Cart — Meal Buddy{% endblock %}
+
+{% block navbar_extra %}
+<div class="ms-auto d-flex align-items-center gap-3">
+    <span class="navbar-text">
+        <i class="bi bi-person-circle me-1" style="color: #FF6B35;"></i>{{ username }}
+    </span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h2><i class="bi bi-cart3 me-2"></i>My Cart</h2>
+        <p>Review your items before checkout.</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            {% if itemList %}
+
+            <div class="card mb-4">
+                <div class="card-header-accent d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0"><i class="bi bi-bag me-2"></i>Order Items</h5>
+                    <span class="badge bg-light text-dark">{{ itemList|length }} item{{ itemList|length|pluralize }}</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-styled mb-0">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Item</th>
+                                <th>Description</th>
+                                <th class="text-end">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in itemList %}
+                            <tr>
+                                <td>
+                                    <img src="{{ item.picture }}" alt="{{ item.name }}"
+                                         style="width:60px; height:48px; object-fit:cover; border-radius:8px;"
+                                         onerror="this.src='https://www.indiafilings.com/learn/wp-content/uploads/2024/08/How-to-Start-Food-Business.jpg'">
+                                </td>
+                                <td>
+                                    <div class="fw-semibold" style="color:#1a1a2e;">{{ item.name }}</div>
+                                    {% if item.vegeterian %}
+                                    <span class="badge-veg" style="font-size:0.65rem;">Veg</span>
+                                    {% else %}
+                                    <span class="badge-nonveg" style="font-size:0.65rem;">Non-Veg</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted" style="font-size:0.9rem;">{{ item.description }}</td>
+                                <td class="text-end fw-bold" style="color:#FF6B35;">₹{{ item.price }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Order Summary Card -->
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3" style="color:#1a1a2e;">Order Summary</h5>
+
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>Subtotal ({{ itemList|length }} item{{ itemList|length|pluralize }})</span>
+                        <span>₹{{ total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>Delivery fee</span>
+                        <span class="text-success fw-semibold">FREE</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold fs-5">Total</span>
+                        <span class="fw-bold fs-5" style="color:#FF6B35;">₹{{ total_price }}</span>
+                    </div>
+
+                    <form action="{% url 'checkout' username %}">
+                        <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius:12px; font-size:1.05rem;">
+                            <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% else %}
+            <div class="text-center py-5">
+                <div style="font-size:4rem;">🛒</div>
+                <h5 class="mt-3 fw-bold" style="color:#1a1a2e;">Your cart is empty</h5>
+                <p class="text-muted">Browse restaurants and add items to get started.</p>
+                <a href="open_signin" class="btn btn-primary mt-2" style="border-radius:10px;">
+                    <i class="bi bi-shop me-2"></i>Browse Restaurants
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

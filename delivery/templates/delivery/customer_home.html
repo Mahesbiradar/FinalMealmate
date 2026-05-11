@@ -1,40 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Page</title>
-</head>
-<body>
-    <h3>Welcome {{username}}!</h3>
+{% extends 'delivery/base.html' %}
+{% block title %}Restaurants — Meal Buddy{% endblock %}
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Restaurant name</th>
-                <th>Picture</th>
-                <th>Cuisine</th>
-                <th>Rating</th>
-                <th>Operations</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%  for r in restaurantList %}
-                <tr>
-                    <td>{{ r.name }}</td>
-                    <td>
-                        <img src="{{ r.picture }}">
-                    </td>
-                    <td>{{ r.cuisine }}</td>
-                    <td>{{ r.rating }}</td>
-                    <td>
-                        <a href="{% url 'view_menu' r.id username %}">
-                            View Menu
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+{% block navbar_extra %}
+<div class="ms-auto d-flex align-items-center gap-3">
+    <span class="navbar-text">
+        <i class="bi bi-person-circle me-1" style="color: #FF6B35;"></i>{{ username }}
+    </span>
+    <a href="{% url 'show_cart' username %}" class="btn btn-sm btn-primary" style="border-radius:20px;">
+        <i class="bi bi-cart3 me-1"></i>Cart
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h2>👋 Welcome, {{ username }}!</h2>
+        <p>Choose a restaurant and explore their menu.</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    {% if restaurantList %}
+    <div class="row g-4">
+        {% for r in restaurantList %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card resto-card h-100">
+                <img src="{{ r.picture }}" alt="{{ r.name }}" class="resto-img"
+                     onerror="this.src='https://designshack.net/wp-content/uploads/Free-Simple-Restaurant-Logo-Template.jpg'">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0" style="color:#1a1a2e;">{{ r.name }}</h5>
+                        <span class="badge-rating ms-2 flex-shrink-0">
+                            <i class="bi bi-star-fill me-1"></i>{{ r.rating }}
+                        </span>
+                    </div>
+                    <p class="text-muted mb-3" style="font-size:0.9rem;">
+                        <i class="bi bi-tag me-1"></i>{{ r.cuisine }}
+                    </p>
+                    <a href="{% url 'view_menu' r.id username %}"
+                       class="btn btn-primary w-100" style="border-radius:10px;">
+                        <i class="bi bi-eye me-2"></i>View Menu
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="text-center py-5">
+        <div style="font-size:4rem;">🏪</div>
+        <h5 class="mt-3 fw-bold" style="color:#1a1a2e;">No restaurants available</h5>
+        <p class="text-muted">Check back soon — we're adding new restaurants!</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

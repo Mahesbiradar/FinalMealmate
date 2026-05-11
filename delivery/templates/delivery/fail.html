@@ -1,11 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h3>login failed!</h3>
-</body>
-</html>
+{% extends 'delivery/base.html' %}
+{% block title %}Login Failed — Meal Buddy{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="min-height: calc(100vh - 130px); display:flex; align-items:center;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-md-5 text-center">
+            <div class="card p-5">
+                <div style="font-size: 4rem;">😕</div>
+                <h3 class="fw-bold mt-3" style="color: #dc3545;">Login Failed</h3>
+                <p class="text-muted mt-2 mb-4">
+                    Incorrect username or password. Please check your credentials and try again.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="open_signin" class="btn btn-primary px-4" style="border-radius:10px;">
+                        <i class="bi bi-arrow-left me-2"></i>Try Again
+                    </a>
+                    <a href="open_signup" class="btn btn-outline-secondary px-4" style="border-radius:10px;">
+                        Create Account
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

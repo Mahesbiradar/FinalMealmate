@@ -1,14 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Welcome page</title>
-</head>
-<body>
-    <h3>Welcome to Meal Buddy!</h3>
+{% extends 'delivery/base.html' %}
+{% block title %}Meal Buddy — Home{% endblock %}
 
-    <a href="open_signup">SIGN UP</a>
-    <br>
-    <a href="open_signin">SIGN IN</a>
+{% block content %}
+<section style="
+    min-height: calc(100vh - 130px);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    display: flex; align-items: center;
+">
+    <div class="container py-5 text-center text-white">
 
-</body>
-</html>
+        <div class="mb-4" style="font-size: 5rem; line-height:1;">🍔</div>
+
+        <h1 style="font-size: 3.2rem; font-weight: 800; letter-spacing: -1px;">
+            Welcome to <span style="color: #FF6B35;">Meal Buddy</span>
+        </h1>
+        <p class="mt-3 mb-5" style="font-size: 1.2rem; opacity: 0.8; max-width: 480px; margin: 0 auto 2.5rem;">
+            Discover restaurants near you, browse menus, and get your favourite food delivered fast.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="open_signup" class="btn btn-primary btn-lg px-5 py-3" style="border-radius: 50px; font-size: 1rem;">
+                <i class="bi bi-person-plus-fill me-2"></i>Create Account
+            </a>
+            <a href="open_signin" class="btn btn-outline-light btn-lg px-5 py-3" style="border-radius: 50px; font-size: 1rem;">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </a>
+        </div>
+
+        <div class="mt-5 pt-3 d-flex justify-content-center gap-5 flex-wrap" style="opacity: 0.6; font-size: 0.9rem;">
+            <span><i class="bi bi-shop me-1"></i> Multiple Restaurants</span>
+            <span><i class="bi bi-cart3 me-1"></i> Easy Ordering</span>
+            <span><i class="bi bi-shield-check me-1"></i> Secure Payments</span>
+            <span><i class="bi bi-lightning-fill me-1"></i> Fast Delivery</span>
+        </div>
+    </div>
+</section>
+{% endblock %}

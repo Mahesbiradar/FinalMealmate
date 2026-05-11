@@ -1,27 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form action="{% url 'update_restaurant' restaurant.id %}" method="post">
-        {% csrf_token %}
-        <label>Restaurant name </label>
-        <input type="text" name="name" value="{{restaurant.name}}">
-        <br><br>
-        <label>Picture url </label>
-        <input type="text" name="picture" value="{{restaurant.picture}}">
-        <br><br>
-        <label>Cuisine </label>
-        <input type="text" name="cuisine" value="{{restaurant.cuisine}}">
-        <br><br>
-        <label>Rating</label>
-        <input type="number" name="rating" min="0" max="5" step="0.5" value="{{restaurant.rating}}">
-        <br><br>
-        <br><br>
-        <button type="submit">Update Restaurant</button>
-    </form>
-</body>
-</html>
+{% extends 'delivery/base.html' %}
+{% block title %}Edit {{ restaurant.name }} — Meal Buddy{% endblock %}
+
+{% block navbar_extra %}
+<span class="navbar-text ms-auto">
+    <i class="bi bi-shield-fill-check me-1" style="color: #FF6B35;"></i>Admin Panel
+</span>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h2><i class="bi bi-pencil-square me-2"></i>Edit Restaurant</h2>
+        <p>Update the details for <strong>{{ restaurant.name }}</strong>.</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            {% if restaurant.picture %}
+            <div class="text-center mb-4">
+                <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}"
+                     style="width:100%; max-height:200px; object-fit:cover; border-radius:16px; box-shadow: 0 4px 20px rgba(0,0,0,0.12);">
+            </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header-accent">
+                    <h5><i class="bi bi-pencil me-2"></i>Update Details</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{% url 'update_restaurant' restaurant.id %}" method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Restaurant Name</label>
+                            <input type="text" name="name" class="form-control"
+                                   value="{{ restaurant.name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Picture URL</label>
+                            <input type="url" name="picture" class="form-control"
+                                   value="{{ restaurant.picture }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cuisine Type</label>
+                            <input type="text" name="cuisine" class="form-control"
+                                   value="{{ restaurant.cuisine }}" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Rating <span class="text-muted fw-normal">(0 – 5)</span></label>
+                            <input type="number" name="rating" class="form-control"
+                                   min="0" max="5" step="0.5" value="{{ restaurant.rating }}" required>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-primary flex-grow-1 py-2" style="border-radius:10px;">
+                                <i class="bi bi-check-circle me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'open_show_restaurant' %}" class="btn btn-outline-secondary py-2" style="border-radius:10px;">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="{% url 'open_show_restaurant' %}" class="text-muted text-decoration-none" style="font-size:0.9rem;">
+                    <i class="bi bi-arrow-left me-1"></i>Back to restaurants
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,2 +1,27 @@
-Django==6.0.3
-razorpay==2.0.1
+# ── Core Framework ────────────────────────────────────────────────────────────
+Django==6.0.3              # Web framework: routing, ORM, templates, admin panel
+asgiref==3.11.1            # Django async support (ASGI interface layer)
+sqlparse==0.5.5            # SQL query formatting used internally by Django
+tzdata==2026.2             # Timezone data (required by Django on Windows)
+
+# ── Payment Gateway ───────────────────────────────────────────────────────────
+razorpay==2.0.1            # Razorpay Python SDK: create and verify payment orders
+
+# ── HTTP Client (used by Razorpay SDK) ────────────────────────────────────────
+requests==2.33.1           # HTTP library used by the Razorpay SDK
+certifi==2026.4.22         # SSL certificate bundle for HTTPS requests
+charset-normalizer==3.4.7  # Character encoding detection (requests dependency)
+idna==3.14                 # Internationalised domain names (requests dependency)
+urllib3==2.7.0             # HTTP connection pooling (requests dependency)
+
+# ── Static Files (Production) ─────────────────────────────────────────────────
+whitenoise==6.8.2          # Serve static files directly from Django in production
+                           # Required for PythonAnywhere and similar WSGI hosts
+
+# ── WSGI Server (Production) ──────────────────────────────────────────────────
+gunicorn==23.0.0           # Production WSGI server (used on PythonAnywhere / Linux)
+packaging==26.2            # Version parsing utilities (gunicorn dependency)
+
+# ── Environment / Secrets Management ─────────────────────────────────────────
+python-decouple==3.8       # Reads SECRET_KEY, DB credentials etc. from a .env file
+                           # Keeps sensitive values out of settings.py and version control

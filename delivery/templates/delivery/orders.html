@@ -1,23 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <title>Order Summary</title>
-</head>
-<body>
-    <h1>Thank you for your order, {{ username }}!</h1>
+{% extends 'delivery/base.html' %}
+{% block title %}Order Confirmed — Meal Buddy{% endblock %}
 
+{% block navbar_extra %}
+<div class="ms-auto d-flex align-items-center gap-3">
+    <span class="navbar-text">
+        <i class="bi bi-person-circle me-1" style="color: #FF6B35;"></i>{{ username }}
+    </span>
+</div>
+{% endblock %}
 
-    <h2>Delivery Address</h2>
-    <p>{{ customer.address }}</p>
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
 
-    <p>Your order will be delivered to this location shortly. Thank you for choosing Meal Mate!</p>
+            <!-- Success banner -->
+            <div class="card text-center mb-4" style="border-top: 5px solid #28a745;">
+                <div class="card-body p-5">
+                    <div style="font-size: 4.5rem; line-height:1;">✅</div>
+                    <h2 class="fw-bold mt-3" style="color:#1a1a2e;">Order Confirmed!</h2>
+                    <p class="text-muted mt-2 mb-0">
+                        Thank you, <strong>{{ username }}</strong>! Your order has been placed successfully.
+                        We'll get it delivered as fast as possible.
+                    </p>
+                </div>
+            </div>
 
-    {% if cart_items %}
-        <a href="{% url 'customer_menu' cart_items.0.restaurant.id username %}">Back to Restaurants</a>
-    {% else %}
-        <a href="/">Back to Home</a>
-    {% endif %}
-</body>
-</html>
+            <!-- Delivery address -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3" style="color:#1a1a2e;">
+                        <i class="bi bi-geo-alt-fill me-2" style="color:#FF6B35;"></i>Delivery Address
+                    </h5>
+                    <p class="mb-0 text-muted" style="font-size:1rem; line-height:1.7;">
+                        {{ customer.address }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Order items if available -->
+            {% if cart_items %}
+            <div class="card mb-4">
+                <div class="card-header-accent">
+                    <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>Order Details</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% for item in cart_items %}
+                    <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+                        <span class="fw-semibold">{{ item.name }}</span>
+                        <span style="color:#FF6B35; font-weight:600;">₹{{ item.price }}</span>
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                        <span class="fw-bold">Total Paid</span>
+                        <span class="fw-bold fs-5" style="color:#FF6B35;">₹{{ total_price }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Estimated delivery info -->
+            <div class="card mb-4" style="background: #f0fff4; border: 1.5px solid #d4edda;">
+                <div class="card-body p-4 d-flex align-items-center gap-3">
+                    <div style="font-size:2.5rem;">🛵</div>
+                    <div>
+                        <div class="fw-bold" style="color:#155724;">Estimated Delivery: 30–45 minutes</div>
+                        <div class="text-muted" style="font-size:0.88rem;">
+                            Your food is being prepared. Thank you for choosing Meal Buddy!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="/" class="btn btn-primary btn-lg px-5" style="border-radius:50px;">
+                    <i class="bi bi-house-fill me-2"></i>Back to Home
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

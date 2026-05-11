@@ -1,45 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h3>Welcome {{username}}!</h3>
+{% extends 'delivery/base.html' %}
+{% block title %}{{ restaurant.name }} Menu — Meal Buddy{% endblock %}
 
-    <a href="{% url 'show_cart' username %}" >Go to cart</a>
+{% block navbar_extra %}
+<div class="ms-auto d-flex align-items-center gap-3">
+    <span class="navbar-text">
+        <i class="bi bi-person-circle me-1" style="color: #FF6B35;"></i>{{ username }}
+    </span>
+    <a href="{% url 'show_cart' username %}" class="btn btn-sm btn-primary" style="border-radius:20px;">
+        <i class="bi bi-cart3 me-1"></i>My Cart
+    </a>
+</div>
+{% endblock %}
 
-    <!-- show current menu -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item name</th>
-                <th>Picture</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Is veg?</th>
-                <th>Operation</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%  for item in itemList %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>
-                        <img src="{{ item.picture }}">
-                    </td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.vegeterian }}</td>
-                    <td>
-                        <a href="{% url 'add_to_cart' item.id username %}">
-                            Add to cart
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h2><i class="bi bi-shop me-2"></i>{{ restaurant.name }}</h2>
+        <p>
+            <i class="bi bi-tag me-1"></i>{{ restaurant.cuisine }}
+            &nbsp;&nbsp;
+            <i class="bi bi-star-fill me-1" style="color: #FF6B35;"></i>{{ restaurant.rating }}
+        </p>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    {% if itemList %}
+    <div class="row g-4">
+        {% for item in itemList %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card food-card h-100">
+                <img src="{{ item.picture }}" alt="{{ item.name }}" class="food-img"
+                     onerror="this.src='https://www.indiafilings.com/learn/wp-content/uploads/2024/08/How-to-Start-Food-Business.jpg'">
+                <div class="card-body p-3 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h6 class="fw-bold mb-0" style="color:#1a1a2e;">{{ item.name }}</h6>
+                        {% if item.vegeterian %}
+                        <span class="badge-veg ms-2 flex-shrink-0">Veg</span>
+                        {% else %}
+                        <span class="badge-nonveg ms-2 flex-shrink-0">Non-Veg</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-muted mb-2 flex-grow-1" style="font-size:0.85rem;">
+                        {{ item.description }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+                        <span class="fw-bold fs-5" style="color:#FF6B35;">₹{{ item.price }}</span>
+                        <a href="{% url 'add_to_cart' item.id username %}"
+                           class="btn btn-sm btn-primary" style="border-radius:8px;">
+                            <i class="bi bi-cart-plus me-1"></i>Add
                         </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="text-center py-5">
+        <div style="font-size:3.5rem;">🍽️</div>
+        <h5 class="mt-3 fw-bold">Menu is empty</h5>
+        <p class="text-muted">This restaurant hasn't added any items yet.</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

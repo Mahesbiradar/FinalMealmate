@@ -1,15 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
-</head>
-<body>
-    <h3>Welcome to Admin HOME!</h3>
+{% extends 'delivery/base.html' %}
+{% block title %}Admin Dashboard — Meal Buddy{% endblock %}
 
-    <a href="open_add_restaurant">ADD NEW RESTAURANT</a>
-    <br><br>
-    <a href="open_show_restaurant">SHOW RESTAURANTS</a>
-</body>
-</html>
+{% block navbar_extra %}
+<span class="navbar-text ms-auto">
+    <i class="bi bi-shield-fill-check me-1" style="color: #FF6B35;"></i>Admin Panel
+</span>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h2><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h2>
+        <p>Manage restaurants, menus, and more.</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-md-5">
+            <a href="open_add_restaurant" class="text-decoration-none">
+                <div class="card h-100 text-center p-4" style="border-top: 4px solid #FF6B35; transition: transform 0.2s, box-shadow 0.2s;"
+                     onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.13)'"
+                     onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🏪</div>
+                    <h5 class="fw-bold" style="color: #1a1a2e;">Add New Restaurant</h5>
+                    <p class="text-muted" style="font-size:0.9rem;">Register a new restaurant with its name, cuisine type, and rating.</p>
+                    <span class="btn btn-primary mt-2" style="border-radius:10px;">
+                        <i class="bi bi-plus-circle me-2"></i>Add Restaurant
+                    </span>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-5">
+            <a href="open_show_restaurant" class="text-decoration-none">
+                <div class="card h-100 text-center p-4" style="border-top: 4px solid #1a1a2e; transition: transform 0.2s, box-shadow 0.2s;"
+                     onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.13)'"
+                     onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+                    <h5 class="fw-bold" style="color: #1a1a2e;">Manage Restaurants</h5>
+                    <p class="text-muted" style="font-size:0.9rem;">View, edit, delete restaurants and update their menus.</p>
+                    <span class="btn btn-dark mt-2" style="border-radius:10px;">
+                        <i class="bi bi-list-ul me-2"></i>View Restaurants
+                    </span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
